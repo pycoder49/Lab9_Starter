@@ -47,6 +47,19 @@
       width: 122px;
     }
   </style>
+
+  
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "baee38d6c9d24af8b7ee1bd5e196a759"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+    setTimeout(() => { throw new Error("Real TrackJS test error"); }, 0);
+  </script>
+
+
 </head>
 
 <body>
@@ -88,6 +101,14 @@
   </main>
 
   <script>
+    // adding my custom here at the top so it can e used later in the script
+    class CustomError extends Error{
+      constructor(text){
+        super(`${text}`);
+        this.name = "CustomError";
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +116,91 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      // adding try error catch here so that the calculate button doesn't work if a field is empty
+      // I hope this is a realistic enough example T_T
+      try{
+        if(!firstNum || !secondNum){
+          throw new Error("gotta fill up the boxes");
+        }
+
+        if(isNaN(firstNum) || isNaN(secondNum)){
+          throw new CustomError("One of these isn't a number man!");
+        }
+
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch (error){
+        console.error("calculation error: ", error.message);
+        output.innerHTML = `error occured: ${error.message}`;
+      }
+      finally{
+        console.log("Do I need the finally thing here?");
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    // using a switch statement for a more clear and easy to read code
+    errorBtns.forEach(button =>{
+      button.addEventListener("click", () =>{
+        switch(button.textContent){
+          case "Console Log":
+            console.log("console log text");
+            break;
+          case "Console Error":
+            console.error("console error text");
+            break;
+          case "Console Count":
+            console.count("Count text?");
+            break;
+          case "Console Warn":
+            console.warn("console warn text");
+            break;
+          case "Console Assert":
+            console.assert(false, "Assert failed?");
+            break;
+          case "Console Clear":
+            console.clear();
+            break;
+          case "Console Dir":
+            console.dir(document.body);
+            break;
+          case "Console dirxml":
+            console.dirxml(document);
+            break;
+          case "Console Group Start":
+            console.group("group text");
+            break;
+          case "Console Group End":
+            console.groupEnd();
+            break;
+          case "Console Table":
+            console.table([{product: "Campus Swipe", table: 2}, {product: "Campus Swipe again", another: "fun"}]);
+            break;
+          case "Start Timer":
+            console.time("Timer");
+            break;
+          case "End Timer":
+            console.timeEnd("Timer");
+            break;
+          case "Console Trace":
+            console.trace("trace text");
+            break;
+          case "Trigger a Global Error":
+            throw new Error("global error text");
+            // don't need a break statement here since it's the last case anyway
+        }
+      })
+    })
+
+    // adding the window.onerror here for anyr emaining errors not caught by the try catch
+    window.onerror = function(){
+      console.log("there's been a global error lol");
+    }
   </script>
 </body>
 
