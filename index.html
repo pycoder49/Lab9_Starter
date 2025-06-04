@@ -57,7 +57,7 @@
       application: "testapp"
       // for more configuration options, see https://docs.trackjs.com
     });
-    setTimeout(() => { throw new Error("Real TrackJS test error"); }, 0);
+    setTimeout(() => { throw new Error("TrackJS test error"); }, 0);
   </script>
 
 
@@ -133,6 +133,7 @@
       }
       catch (error){
         console.error("calculation error: ", error.message);
+        TrackJS.track(error);
         output.innerHTML = `error occured: ${error.message}`;
       }
       finally{
