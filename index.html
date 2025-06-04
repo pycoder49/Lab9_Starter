@@ -53,7 +53,8 @@
   <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
     window.TrackJS && TrackJS.install({ 
-      token: "baee38d6c9d24af8b7ee1bd5e196a759"
+      token: "baee38d6c9d24af8b7ee1bd5e196a759",
+      application: "testapp"
       // for more configuration options, see https://docs.trackjs.com
     });
     setTimeout(() => { throw new Error("Real TrackJS test error"); }, 0);
